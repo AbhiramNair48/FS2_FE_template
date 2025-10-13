@@ -18,9 +18,23 @@ const db = mysql.createPool({
   database: process.env.DB_NAME,
 });
 
-app.post('/submit-form', (req, res) => {
-  // TODO: Finish the Lesson 9 /submit-form implementation using your database pool.
-  res.status(501).json({ message: 'Not implemented yet' });
+
+// POST route to handle inserting a new pokemon to the database
+app.post('/api/insert', (req, res) => {
+
+   // extracting the pokemon name and type from the request body
+   const first_name = req.body.first_name;
+   const last_name = req.body.last_name;
+   const email = req.body.email;
+   const message = req.body.message;
+
+   //creating the sql query
+   const sqlInsert = "INSERT INTO ecommerce.contact_information (first_name, last_name, email, message) VALUES (?,?,?,?)"
+
+   //execute query to insert new pokemon
+   db.query(sqlInsert, [first_name, last_name, email, message], (err, result)=> {
+       console.log(err);
+   })
 });
 
 app.listen(PORT, () => {
