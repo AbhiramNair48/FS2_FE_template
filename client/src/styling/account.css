@@ -1,5 +1,39 @@
 #account {
-  position: absolute;
-  top: 40px;
-  margin-top: 30px;
+  position: relative;
+  top: 125px;
+  margin: 40px auto;
+  max-width: 700px;
+  padding: 60px 40px;
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  margin-bottom: 120px;
+}
+
+#account h1,
+#account h2,
+#account h3 {
+  color: #333;
+  margin-bottom: 20px;
+}
+
+#account h1 {
+  font-size: 2.5em;
+  font-weight: 700;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-align: center;
+}
+
+@media (max-width: 768px) {
+  #account {
+    padding: 40px 20px;
+    margin: 125px 20px 120px;
+  }
+  
+  #account h1 {
+    font-size: 2em;
+  }
 }

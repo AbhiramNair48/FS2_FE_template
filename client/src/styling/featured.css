@@ -1,29 +1,141 @@
 .img {
-  height: 200px;
-  width: 200px;
-  margin: 10px;
+  height: 220px;
+  width: 100%;
+  object-fit: cover;
+  border-radius: 12px 12px 0 0;
+  transition: transform 0.3s ease;
+}
+
+.featured-card:hover .img {
+  transform: scale(1.05);
 }
 
 #card-container {
-  display: flex;
-  max-height: 50vh;
-  overflow-x: auto;
-  scroll-behavior: smooth;
-  margin-top: 20px;
-  margin-left: 20px;
-  margin-right: 20px;
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 25px;
+  margin: 40px 20px;
+  padding: 20px 0;
   text-align: center;
-  border: solid black;
-  background-color: white;
+}
+
+#card-container::-webkit-scrollbar {
+  height: 8px;
+}
+
+#card-container::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
+}
+
+#card-container::-webkit-scrollbar-thumb {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 10px;
 }
 
 .featured-card {
-  min-width: 300px;
-  justify-content: space-between;
-  margin: 20px;
+  min-width: 280px;
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  transition: all 0.3s ease;
+  display: flex;
+  flex-direction: column;
+}
+
+.featured-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+}
+
+.featured-card h3 {
+  padding: 20px;
+  font-size: 1.2em;
+  font-weight: 600;
+  color: #333;
+  margin: 0;
+  background: white;
+  flex-grow: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 #gallery-head {
-  background: black;
-  margin-top: -5px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  margin-top: 0;
+  padding: 40px 20px;
+  text-align: center;
+}
+
+#gallery-head h1 {
+  color: white;
+  font-size: 2.5em;
+  font-weight: 700;
+  margin: 0;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+}
+
+/* Grid layout for products with 5 items per row */
+.horizontal-layout {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 25px;
+  margin: 40px 20px;
+  padding: 20px 0;
+  text-align: center;
+}
+
+.horizontal-layout::-webkit-scrollbar {
+  height: 8px;
+}
+
+.horizontal-layout::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
+}
+
+.horizontal-layout::-webkit-scrollbar-thumb {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 10px;
+}
+
+.horizontal-card {
+  min-width: 280px;
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  transition: all 0.3s ease;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Responsive design for grid layout */
+@media (max-width: 768px) {
+  .horizontal-layout {
+    grid-template-columns: repeat(3, 1fr); /* 3 items per row on medium screens */
+    gap: 15px;
+    padding: 20px 15px;
+    margin: 20px 10px;
+  }
+  
+  .horizontal-card {
+    min-width: 220px;
+    padding: 15px;
+  }
+}
+
+@media (max-width: 480px) {
+  .horizontal-layout {
+    grid-template-columns: repeat(2, 1fr); /* 2 items per row on small screens */
+    gap: 10px;
+    padding: 15px 10px;
+  }
+  
+  .horizontal-card {
+    min-width: 180px;
+    padding: 10px;
+  }
 }

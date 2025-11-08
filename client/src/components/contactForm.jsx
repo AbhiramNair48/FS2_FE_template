@@ -2,38 +2,89 @@ import React, { useState } from "react";
 import axios from "axios";
 
 const ContactForm = () => {
-  // Lesson 9 TODO: Step 1 – Collect the form data in component state so it can be sent to your server.
   const [formData, setFormData] = useState({
     firstname: "",
     lastname: "",
     email: "",
-    subject: "",
+    message: "",
   });
 
-  // Lesson 9 TODO: Step 2 – Send this data to your Express endpoint once it's implemented.
-  // Lesson 9 TODO: Step 3 – Handle both success and failure responses from the server.
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitStatus, setSubmitStatus] = useState({
+    type: null, // 'success' or 'error'
+    message: ""
+  });
+
   const handleSubmit = (event) => {
     event.preventDefault();
+    setIsSubmitting(true);
+    setSubmitStatus({ type: null, message: "" });
+
+    const apiUrl = process.env.REACT_APP_API_BASE_URL || "http://localhost:3001";
+    
     axios
-      // Reminder: set REACT_APP_API_BASE_URL in your .env once your Express server is up.
-      .post(`${process.env.REACT_APP_API_BASE_URL}/submit-form`, formData)
+      .post(`${apiUrl}/api/contact`, formData)
       .then((response) => {
-        console.log(response.data);
-        // TODO: replace this console.log with user feedback once the POST route is working.
+        if (response.data.success) {
+          setSubmitStatus({
+            type: 'success',
+            message: response.data.message || 'Contact form submitted successfully!'
+          });
+          // Reset form after successful submission
+          setFormData({
+            firstname: "",
+            lastname: "",
+            email: "",
+            message: "",
+          });
+        } else {
+          setSubmitStatus({
+            type: 'error',
+            message: response.data.error || 'Failed to submit contact form.'
+          });
+        }
       })
       .catch((error) => {
-        console.log(error);
-        // TODO: surface an error message to the user once the POST route is working.
+        const errorMessage = error.response?.data?.error 
+          || error.message 
+          || 'Failed to submit contact form. Please try again later.';
+        setSubmitStatus({
+          type: 'error',
+          message: errorMessage
+        });
+      })
+      .finally(() => {
+        setIsSubmitting(false);
       });
   };
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;
     setFormData((prevFormData) => ({ ...prevFormData, [name]: value }));
+    // Clear status message when user starts typing
+    if (submitStatus.type) {
+      setSubmitStatus({ type: null, message: "" });
+    }
   };
 
   return (
     <div id="contact">
+      {submitStatus.type && (
+        <div 
+          className={`status-message ${submitStatus.type}`}
+          style={{
+            padding: '12px 16px',
+            marginBottom: '20px',
+            borderRadius: '8px',
+            backgroundColor: submitStatus.type === 'success' ? '#d4edda' : '#f8d7da',
+            color: submitStatus.type === 'success' ? '#155724' : '#721c24',
+            border: `1px solid ${submitStatus.type === 'success' ? '#c3e6cb' : '#f5c6cb'}`,
+            fontSize: '14px'
+          }}
+        >
+          {submitStatus.message}
+        </div>
+      )}
       <form onSubmit={handleSubmit}>
         <label htmlFor="fname">First Name</label>
         <input
@@ -44,6 +95,7 @@ const ContactForm = () => {
           placeholder="Your name.."
           value={formData.firstname}
           onChange={handleInputChange}
+          required
         />
 
         <label htmlFor="lname">Last Name</label>
@@ -55,27 +107,34 @@ const ContactForm = () => {
           placeholder="Your last name.."
           value={formData.lastname}
           onChange={handleInputChange}
+          required
         />
 
         <label htmlFor="email">Email Address</label>
-        <textarea
+        <input
+          type="email"
+          className="name"
           id="email"
           name="email"
-          placeholder="Please leave an email address where we can reach you"
+          placeholder="your.email@example.com"
           value={formData.email}
           onChange={handleInputChange}
+          required
         />
 
-        <label htmlFor="subject">Subject</label>
+        <label htmlFor="message">Message</label>
         <textarea
-          id="subject"
-          name="subject"
-          placeholder="Write something.."
-          value={formData.subject}
+          id="message"
+          name="message"
+          placeholder="Write your message.."
+          value={formData.message}
           onChange={handleInputChange}
+          required
         />
 
-        <button type="submit">Submit</button>
+        <button type="submit" disabled={isSubmitting}>
+          {isSubmitting ? 'Submitting...' : 'Submit'}
+        </button>
       </form>
     </div>
   );

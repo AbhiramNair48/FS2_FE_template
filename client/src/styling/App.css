@@ -1,21 +1,16 @@
 html {
   height: 100%;
-}
-
-body {
-  top: 0px;
-  min-height: 100%;
-  width: 100vw;
-  background-color: grey;
+  scroll-behavior: smooth;
 }
 
 .main {
-  overflow: auto;
-  position: absolute;
+  overflow-x: hidden;
+  position: relative;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   top: 0px;
   width: 100vw;
-  min-height: 140vh;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
 }
