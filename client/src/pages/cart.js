@@ -2,6 +2,14 @@ import React from "react";
 import { useCart } from "../context/CartContext";
 import { Link } from "react-router-dom";
 
+// Helper function to extract numeric price from string
+const extractPrice = (price) => {
+  if (typeof price === 'string') {
+    return parseFloat(price.replace(/[^0-9.-]+/g, '')) || 0;
+  }
+  return price || 0;
+};
+
 const Cart = () => {
   const { items, itemCount, removeFromCart, updateQuantity, getCartTotal, clearCart } = useCart();
 
@@ -21,10 +29,16 @@ const Cart = () => {
     }
   };
 
+  // Calculate item total
+  const calculateItemTotal = (product) => {
+    const price = extractPrice(product.price);
+    return (price * product.quantity).toFixed(2);
+  };
+
   return (
     <div id="cart-container">
       <h1 id="cart-title">Your Cart ({itemCount} {itemCount === 1 ? 'item' : 'items'})</h1>
-      
+
       {items.length === 0 ? (
         <div className="empty-cart">
           <h2>Your cart is empty</h2>
@@ -36,42 +50,47 @@ const Cart = () => {
             {items.map((product) => (
               <div className="cart-item" key={product.id}>
                 <div className="cart-item-info">
-                  <img src={product.image} alt={product.name} onError={(e) => {
-                    e.target.src = '/productImages/default.png'; // fallback image
-                  }} />
+                  <img 
+                    src={product.image} 
+                    alt={product.name} 
+                    onError={(e) => {
+                      e.target.src = '/productImages/default.png'; // fallback image
+                    }} 
+                  />
                   <div className="cart-item-details">
                     <h3>{product.name}</h3>
                     <p>{product.description}</p>
-                    <div className="price">${typeof product.price === 'string' ? product.price.replace('$', '') : product.price}</div>
+                    <div className="price">${extractPrice(product.price).toFixed(2)}</div>
                   </div>
                 </div>
-                
+
                 <div className="cart-item-controls">
                   <div className="quantity-control">
-                    <button 
-                      className="quantity-btn" 
+                    <button
+                      className="quantity-btn"
                       onClick={() => handleQuantityChange(product.id, product.quantity - 1)}
+                      aria-label={`Decrease quantity of ${product.name}`}
                     >
                       -
                     </button>
                     <span className="quantity">{product.quantity}</span>
-                    <button 
-                      className="quantity-btn" 
+                    <button
+                      className="quantity-btn"
                       onClick={() => handleQuantityChange(product.id, product.quantity + 1)}
+                      aria-label={`Increase quantity of ${product.name}`}
                     >
                       +
                     </button>
                   </div>
-                  
+
                   <div className="item-total">
-                    ${(typeof product.price === 'string' 
-                      ? parseFloat(product.price.replace('$', '')) 
-                      : product.price || 0) * product.quantity}
+                    ${calculateItemTotal(product)}
                   </div>
-                  
-                  <button 
-                    className="remove-btn" 
+
+                  <button
+                    className="remove-btn"
                     onClick={() => handleRemoveItem(product)}
+                    aria-label={`Remove ${product.name} from cart`}
                   >
                     Remove
                   </button>
@@ -79,18 +98,18 @@ const Cart = () => {
               </div>
             ))}
           </div>
-          
+
           <div className="cart-summary">
             <div className="total">Total: ${getCartTotal().toFixed(2)}</div>
-            <button 
-              className="clear-cart-btn" 
+            <button
+              className="clear-cart-btn"
               onClick={clearCart}
               disabled={items.length === 0}
             >
               Clear Cart
             </button>
-            <button 
-              className="checkout-btn" 
+            <button
+              className="checkout-btn"
               disabled={items.length === 0}
             >
               Checkout
@@ -98,7 +117,7 @@ const Cart = () => {
           </div>
         </>
       )}
-      
+
       <div className="continue-shopping">
         <Link to="/shopping">Continue Shopping</Link>
       </div>

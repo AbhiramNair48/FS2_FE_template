@@ -1,6 +1,11 @@
 import React, { useState } from "react";
 import axios from "axios";
 
+// Helper function to construct API URL
+const constructApiUrl = (path) => {
+  return `${process.env.REACT_APP_API_BASE_URL || 'http://localhost:3001'}${path}`;
+};
+
 const ContactForm = () => {
   const [formData, setFormData] = useState({
     firstname: "",
@@ -15,47 +20,43 @@ const ContactForm = () => {
     message: ""
   });
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
     setIsSubmitting(true);
     setSubmitStatus({ type: null, message: "" });
 
-    const apiUrl = process.env.REACT_APP_API_BASE_URL || "http://localhost:3001";
-    
-    axios
-      .post(`${apiUrl}/api/contact`, formData)
-      .then((response) => {
-        if (response.data.success) {
-          setSubmitStatus({
-            type: 'success',
-            message: response.data.message || 'Contact form submitted successfully!'
-          });
-          // Reset form after successful submission
-          setFormData({
-            firstname: "",
-            lastname: "",
-            email: "",
-            message: "",
-          });
-        } else {
-          setSubmitStatus({
-            type: 'error',
-            message: response.data.error || 'Failed to submit contact form.'
-          });
-        }
-      })
-      .catch((error) => {
-        const errorMessage = error.response?.data?.error 
-          || error.message 
-          || 'Failed to submit contact form. Please try again later.';
+    try {
+      const response = await axios.post(constructApiUrl('/api/contact'), formData);
+      
+      if (response.data.success) {
+        setSubmitStatus({
+          type: 'success',
+          message: response.data.message || 'Contact form submitted successfully!'
+        });
+        // Reset form after successful submission
+        setFormData({
+          firstname: "",
+          lastname: "",
+          email: "",
+          message: "",
+        });
+      } else {
         setSubmitStatus({
           type: 'error',
-          message: errorMessage
+          message: response.data.error || 'Failed to submit contact form.'
         });
-      })
-      .finally(() => {
-        setIsSubmitting(false);
+      }
+    } catch (error) {
+      const errorMessage = error.response?.data?.error
+        || error.message
+        || 'Failed to submit contact form. Please try again later.';
+      setSubmitStatus({
+        type: 'error',
+        message: errorMessage
       });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const handleInputChange = (event) => {
@@ -70,7 +71,7 @@ const ContactForm = () => {
   return (
     <div id="contact">
       {submitStatus.type && (
-        <div 
+        <div
           className={`status-message ${submitStatus.type}`}
           style={{
             padding: '12px 16px',
@@ -96,6 +97,7 @@ const ContactForm = () => {
           value={formData.firstname}
           onChange={handleInputChange}
           required
+          aria-required="true"
         />
 
         <label htmlFor="lname">Last Name</label>
@@ -108,6 +110,7 @@ const ContactForm = () => {
           value={formData.lastname}
           onChange={handleInputChange}
           required
+          aria-required="true"
         />
 
         <label htmlFor="email">Email Address</label>
@@ -120,6 +123,7 @@ const ContactForm = () => {
           value={formData.email}
           onChange={handleInputChange}
           required
+          aria-required="true"
         />
 
         <label htmlFor="message">Message</label>
@@ -130,6 +134,8 @@ const ContactForm = () => {
           value={formData.message}
           onChange={handleInputChange}
           required
+          aria-required="true"
+          rows="5"
         />
 
         <button type="submit" disabled={isSubmitting}>

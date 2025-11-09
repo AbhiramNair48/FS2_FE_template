@@ -5,11 +5,10 @@
   text-align: center;
   position: relative;
   top: 125px;
-  padding: 40px 30px 120px;
+  padding: 40px 0 120px;
   width: 100%;
   max-width: 1400px;
-  margin: 0 auto;
-  justify-items: center;
+  margin: 40px 30px; /* Use margins like featured section for proper flex alignment */
 }
 
 .card {
@@ -110,9 +109,7 @@ img {
   max-width: 100%;
 }
 
-#shopping-cart {
-  margin-top: 10px;
-}
+
 
 
 
@@ -135,12 +132,7 @@ img {
   #shopping {
     grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
     gap: 20px;
-    padding: 40px 15px 120px;
-  }
-  
-  #cart-container {
-    width: 95%;
-    padding: 20px;
+    padding: 40px 0 120px;
   }
 }
 
@@ -192,7 +184,7 @@ img {
   .horizontal-layout {
     grid-template-columns: repeat(3, 1fr); /* 3 items per row on medium screens */
     gap: 20px;
-    padding: 40px 15px;
+    padding: 40px 0;
   }
   
   .horizontal-card {
@@ -206,7 +198,7 @@ img {
   .horizontal-layout {
     grid-template-columns: repeat(2, 1fr); /* 2 items per row on small screens */
     gap: 15px;
-    padding: 30px 10px;
+    padding: 30px 0;
   }
   
   .horizontal-card {
